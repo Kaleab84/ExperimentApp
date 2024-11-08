@@ -83,7 +83,7 @@ public class JSONScript : MonoBehaviour
                 // Loop through all children of the "Moving Obstacles" GameObject
                 foreach (Transform movingObstacle in movingObstaclesTransform)
                 {
-                    MovingObstacleScript movingObstacleScript = movingObstacle.GetComponent<MovingObstacleScript>();
+                    MovingObstacleComp movingObstacleScript = movingObstacle.GetComponent<MovingObstacleComp>();
 
                     ObstacleInfo movingObstacleCopy = new ObstacleInfo();
                     movingObstacleCopy.Name = movingObstacle.name;
@@ -185,7 +185,7 @@ public class JSONScript : MonoBehaviour
                 movingObstacle.transform.SetParent(movingObstaclesParent.transform);
 
                 // Add the MovingObstacle script to the obstacle
-                MovingObstacleScript movingObstacleScript = movingObstacle.AddComponent<MovingObstacleScript>();
+                MovingObstacleComp movingObstacleScript = movingObstacle.AddComponent<MovingObstacleComp>();
                 movingObstacleScript.StartPoint = scene.MovingObstacles[i].StartPoint;
                 movingObstacleScript.EndPoint = scene.MovingObstacles[i].EndPoint;
                 movingObstacleScript.Speed = scene.MovingObstacles[i].Speed;

@@ -10,7 +10,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{E1CE1FEE-67BE-6533-73AA-CC578BE80DCD}</ProjectGuid>
+    <ProjectGuid>{B0FB546F-147F-BCDD-6645-E0F29220656F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -63,10 +63,10 @@
     <Compile Include="Assets\Scripts\JSONScript.cs" />
     <Compile Include="Assets\Scripts\SceneInfo.cs" />
     <Compile Include="Assets\Scripts\HallComp.cs" />
+    <Compile Include="Assets\Scripts\MovingObstacleComp.cs" />
     <Compile Include="Assets\Scripts\Pastel.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Scripts\playertest.cs" />
-    <Compile Include="Assets\Scripts\MovingObstacleScript.cs" />
     <Compile Include="Assets\Scripts\FPSController.cs" />
   </ItemGroup>
   <ItemGroup>
