@@ -516,3 +516,7 @@ FodyWeavers.xsd
 
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
+/FaragHallway/Assets/Wwise/API
+/FaragHallway/Library
+FaragHallway/Assets/Wwise/Originals/SFX/*.akd
+FaragHallway/Assets/Wwise/.cache/
