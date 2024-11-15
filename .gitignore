@@ -32,6 +32,27 @@ Temporary Items
 *.icloud
 
 ### Unity ###
+### Sharp Unity ###
+
+/SharpHallway/[Ll]ibrary/
+/SharpHallway/[Tt]emp/
+/SharpHallway/[Oo]bj/
+/SharpHallway/[Bb]uild/
+/SharpHallway/[Bb]uilds/
+/SharpHallway/[Ll]ogs/
+/SharpHallway/[Uu]ser[Ss]ettings/
+
+/SharpHallway/[Mm]emoryCaptures/
+/SharpHallway/[Rr]ecordings/
+
+/SharpHallway/[Aa]ssets/Plugins/Editor/JetBrains*
+
+/SharpHallway/.vs/
+/SharpHallway/.gradle/
+/SharpHallway/ExportedObj/
+/SharpHallway/.consulo/
+
+### Sharp Unity End ###
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
