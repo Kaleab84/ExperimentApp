@@ -13,16 +13,16 @@ public class ConfigEditor : Editor
         DrawDefaultInspector();
 
         // Get the target object
-        JSONScript saveConfig = (JSONScript)target;
+        JSONScript JSONScript = (JSONScript)target;
 
         // Create a button and call SaveScene when pressed
         if (GUILayout.Button("Save Config"))
         {
-            saveConfig.SaveScene(); // Call the function from the script
+            JSONScript.SaveScene(); // Call the function from the script
         }
         if (GUILayout.Button("Load Config"))
         {
-            saveConfig.LoadScene();
+            JSONScript.LoadScene();
         }
     }
 }
