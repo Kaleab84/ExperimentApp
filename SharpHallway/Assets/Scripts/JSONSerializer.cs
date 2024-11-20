@@ -14,8 +14,12 @@ using UnityEditor;
 using Unity.VisualScripting;
 
 [System.Serializable]
-public class JSONScript : MonoBehaviour
+public class JSONSerializer : MonoBehaviour
 {
+    //Singleton
+    private static JSONSerializer instance;
+    public static JSONSerializer Instance { get { return instance; } private set { instance = value; } }
+
     [SerializeField] private int sceneNumber = 0;
     public int SceneNumber { get { return sceneNumber; } set { sceneNumber = value; } }
 
@@ -83,7 +87,7 @@ public class JSONScript : MonoBehaviour
                 // Loop through all children of the "Moving Obstacles" GameObject
                 foreach (Transform movingObstacle in movingObstaclesTransform)
                 {
-                    MovingObstacleScript movingObstacleScript = movingObstacle.GetComponent<MovingObstacleScript>();
+                    MovingObstacleComp movingObstacleScript = movingObstacle.GetComponent<MovingObstacleComp>();
 
                     ObstacleInfo movingObstacleCopy = new ObstacleInfo();
                     movingObstacleCopy.Name = movingObstacle.name;
@@ -185,7 +189,7 @@ public class JSONScript : MonoBehaviour
                 movingObstacle.transform.SetParent(movingObstaclesParent.transform);
 
                 // Add the MovingObstacle script to the obstacle
-                MovingObstacleScript movingObstacleScript = movingObstacle.AddComponent<MovingObstacleScript>();
+                MovingObstacleComp movingObstacleScript = movingObstacle.AddComponent<MovingObstacleComp>();
                 movingObstacleScript.StartPoint = scene.MovingObstacles[i].StartPoint;
                 movingObstacleScript.EndPoint = scene.MovingObstacles[i].EndPoint;
                 movingObstacleScript.Speed = scene.MovingObstacles[i].Speed;
@@ -208,5 +212,10 @@ public class JSONScript : MonoBehaviour
     private string GetMaterialPath(GameObject obj)
     {
         return AssetDatabase.GetAssetPath(obj.GetComponent<Renderer>().sharedMaterial);
+    }
+
+    private void OnEnable()
+    {
+        Instance = this;
     }
 }

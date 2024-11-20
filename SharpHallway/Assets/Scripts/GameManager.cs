@@ -1,58 +1,59 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private List<int> sceneOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+    private int currentScene = 0;
+
+    public Vector3 targetPosition = new Vector3();  // The position where the player triggers the next level
+    public float TriggerRadius = 2f; // The radius within which the trigger activates
+    public float LevelTransitionDelay = 1f; // Delay before loading next level
+
+    public void Start()
     {
-        
+        ShuffleList(sceneOrder);    // Randomize scene order
+        JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);  // Load the first scene
+
+        Vector3 farWallPosition = Pastel.Instance.Far.transform.position;   // Mark the targetPosition as the Far Wall position
+        targetPosition = new Vector3(farWallPosition.x, transform.position.y, farWallPosition.z);
+        Debug.Log($"Updated Target Position: {targetPosition} {Pastel.Instance.transform.position} {Pastel.Instance.Far.transform.localPosition}");
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        //JSONScript.LoadScene();   
-    }
-}
-/*
- using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class LevelTrigger : MonoBehaviour
-{
-    public Vector3 targetPosition;  // The position where the player triggers the next level
-    public float triggerRadius = 2f; // The radius within which the trigger activates
-    public float levelTransitionDelay = 1f; // Delay before loading next level
-
-    public void Update()
-    {
-        // Check if the player is close enough to the target position
-        if (Vector3.Distance(transform.position, targetPosition) <= triggerRadius)
-        {
-            // If player is close enough, trigger the level transition
-            TriggerLevelTransition();
-        }
+        Debug.LogWarning(collision.gameObject.name);
     }
 
     private void TriggerLevelTransition()
     {
-        // Call a function to load the next level (for example, we use the SceneManager to load the next scene)
-        Debug.Log("Player reached the target position! Transitioning to next level...");
-
-        // Load the next level (example: by index)
-        int nextLevelIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        if (nextLevelIndex < SceneManager.sceneCountInBuildSettings)
+        if (currentScene < 8)
         {
-            SceneManager.LoadScene(nextLevelIndex);
+            JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);
         }
         else
         {
-            Debug.Log("No more levels! Returning to main menu or restarting.");
+            currentScene = 0;
+        }
+
+        GetComponent<FPSController>().enabled = false;  // FPSControler overrides position, so it has to be disabled while resetting the position.
+        Vector3 closeWallPosition = Pastel.Instance.Close.transform.position; // Respawning position set to the "Close" Wall
+        transform.position = new Vector3(closeWallPosition.x, 1, closeWallPosition.z); // position.y has to be 1 (floor level)
+        GetComponent<FPSController>().enabled = true;
+
+        Vector3 farWallPosition = Pastel.Instance.Far.transform.position;   // Mark the targetPosition as the Far Wall position
+        targetPosition = new Vector3(farWallPosition.x, transform.position.y, farWallPosition.z);
+        Debug.Log($"Updated Target Position: {targetPosition} Far wall position: {farWallPosition}");
+    }
+
+    private void ShuffleList(List<int> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            int temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
         }
     }
 }
- */
