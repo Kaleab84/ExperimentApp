@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
         transform.position = new Vector3(closeWallPosition.x, 1, closeWallPosition.z); // position.y has to be 1 (floor level)
         yield return new WaitForSeconds(0.1f);
         GetComponent<FPSController>().enabled = true;
+
     }
 
     private void ShuffleList(List<int> list)

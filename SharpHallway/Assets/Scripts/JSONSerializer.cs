@@ -12,6 +12,8 @@ public class JSONSerializer : MonoBehaviour
     [SerializeField] private int sceneNumber = 0;
     public int SceneNumber { get { return sceneNumber; } set { sceneNumber = value; } }
 
+    private TrialLogger trialLogger;
+
     public void SaveScene()
     {
         string json = File.ReadAllText(Application.dataPath + "/SceneConfigurationFile.json");  // Retrieving all scenes to modify them
@@ -210,6 +212,8 @@ public class JSONSerializer : MonoBehaviour
                 movingObstacleScript.BackNForth = scene.MovingObstacles[i].BackNForth;
             }
             #endregion
+
+            TransformSpy.instance.NewTrial();
         }
         else
         {

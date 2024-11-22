@@ -23,6 +23,7 @@ public class TrialLogger : IDisposable {
 	private List<string> collisions = new List<string>();
 	private SBPool pool = new SBPool(10);
 
+	bool active = false;
 	bool disposed;
 
 
@@ -45,9 +46,13 @@ public class TrialLogger : IDisposable {
 	public TrialLogger(Transform _subject, string _path, int _flushInterval = 100, int _bufferSize = 8192)
 		: this(_subject, _path, _flushInterval, _bufferSize, Encoding.UTF8) { }
 
+	public void Start() {
+		active = true;
+	}
 
 	public void WriteLog() {
 		if (disposed) { throw new ObjectDisposedException($"Attempting to call methods on disposed class\n{path}"); }
+		if(!active){ return; }
 
 		StringBuilder sb = pool.CheckOut(); //Take a stringbuilder from the string builder pool -- this is mostly for multithreading which isn't going to happen lol
 		sb.Clear(); //just in case
@@ -91,6 +96,7 @@ public class TrialLogger : IDisposable {
 
 	public void LogCollision(GameObject go) {
 		if (disposed) { throw new ObjectDisposedException($"Attempting to call methods on disposed class\n{path}"); }
+		if(!active){ return; }
 
 		collisions.Add(go.name);
 	}
