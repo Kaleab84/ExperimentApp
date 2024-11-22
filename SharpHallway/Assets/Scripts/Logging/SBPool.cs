@@ -8,14 +8,14 @@ public class SBPool {
 	int maxSize = 10;
 	ConcurrentBag<StringBuilder> pool;
 
-	public SBPool(int initSize, int maxSize = 10) {
+	public SBPool(int _initSize, int _maxSize = 10) {
 		pool = new ConcurrentBag<StringBuilder>();
-		this.maxSize = maxSize;
+		maxSize = _maxSize;
 
-		if (initSize > maxSize) { throw new ArgumentException("SBPool: initSize cannot be greater than maxSize."); }
-		if (initSize < 1 || maxSize < 1) { throw new ArgumentException("SBPool: initSize and maxSize must both be greater than 0."); }
+		if (_initSize > maxSize) { throw new ArgumentException("SBPool: initSize cannot be greater than maxSize."); }
+		if (_initSize < 1 || maxSize < 1) { throw new ArgumentException("SBPool: initSize and maxSize must both be greater than 0."); }
 
-		for (int i = 0; i < initSize; i++) {
+		for (int i = 0; i < _initSize; i++) {
 			pool.Add(new StringBuilder());
 		}
 	}
