@@ -1,17 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
-using System.Runtime.Serialization.Formatters.Binary;
-using UnityEngine;
-using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
-using UnityEngine.UIElements;
-using Vector3 = UnityEngine.Vector3;
-using System.Linq;
 using UnityEditor;
-using Unity.VisualScripting;
+using UnityEngine;
 
 [System.Serializable]
 public class JSONSerializer : MonoBehaviour
@@ -128,6 +117,7 @@ public class JSONSerializer : MonoBehaviour
         if (loadSceneNumber < All.Scenes.Count)
         {
             SceneInfo scene = All.Scenes[loadSceneNumber.Value];    // Load the dictated scene
+            Debug.Log(loadSceneNumber.Value);
 
             #region Load Hallway
             // Fetches data from the JSON to a static reference of the Hallway "Pastel.Instance"
@@ -145,11 +135,19 @@ public class JSONSerializer : MonoBehaviour
             #endregion
 
             #region Load Static Obstacles 
+
             //Delete Previous Scene Static Obstacles
             Transform staticObstaclesTransform = transform.Find("Static Obstacles");
             if (staticObstaclesTransform != null)
             {
-                DestroyImmediate(staticObstaclesTransform.gameObject);
+                if (Application.isPlaying)
+                {
+                    Destroy(staticObstaclesTransform.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(staticObstaclesTransform.gameObject);
+                }
             }
 
             //Load New Scene Obstacles
@@ -164,15 +162,30 @@ public class JSONSerializer : MonoBehaviour
                 obstacle.transform.position = scene.Obstacles[i].Position;
                 obstacle.GetComponent<Renderer>().sharedMaterial = GetMaterial(scene.Obstacles[i].ObstacleMaterialPath);
                 obstacle.transform.SetParent(staticObstaclesParent.transform);
+
+                // Test code >>
+                if (obstacle.name == "FinishZone")
+                {
+                    obstacle.GetComponent<BoxCollider>().isTrigger = true;
+                    obstacle.GetComponent<Renderer>().enabled = false;
+                }
             }
             #endregion
 
             #region Load Moving Obstacles
+
             //Delete Previous Scene Moving Obstacles
             Transform movingObstaclesTransform = transform.Find("Moving Obstacles");
             if (movingObstaclesTransform != null)
             {
-                DestroyImmediate(movingObstaclesTransform.gameObject);
+                if (Application.isPlaying)
+                {
+                    Destroy(movingObstaclesTransform.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(movingObstaclesTransform.gameObject);
+                }
             }
 
             GameObject movingObstaclesParent = new GameObject("Moving Obstacles");
@@ -211,7 +224,16 @@ public class JSONSerializer : MonoBehaviour
 
     private string GetMaterialPath(GameObject obj)
     {
-        return AssetDatabase.GetAssetPath(obj.GetComponent<Renderer>().sharedMaterial);
+        Renderer renderer = obj.GetComponent<Renderer>();
+        if (renderer != null && renderer.sharedMaterial != null)
+        {
+            return AssetDatabase.GetAssetPath(renderer.sharedMaterial);
+        }
+        else
+        {
+            Debug.LogWarning("Object does not have a Renderer component or its sharedMaterial is null.");
+            return null;
+        }
     }
 
     private void OnEnable()
