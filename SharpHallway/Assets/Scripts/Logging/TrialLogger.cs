@@ -35,9 +35,9 @@ public class TrialLogger : IDisposable {
 		if (!Directory.Exists(Path.GetDirectoryName(_path))) {
 			Directory.CreateDirectory(Path.GetDirectoryName(_path));
 		}
-
+		
 		writer = new StreamWriter(_path, true, _encoding, _bufferSize);
-		writer.WriteLine("Time,PlayerX,PlayerY,Pitch,Yaw,Collisions");
+		writer.WriteLine("Time,Player X,Player Y,Pitch,Yaw,Collision(s)");
 		writer.Flush();
 
 		startTime = Time.time;
@@ -46,6 +46,7 @@ public class TrialLogger : IDisposable {
 	public TrialLogger(Transform _subject, string _path, int _flushInterval = 100, int _bufferSize = 8192)
 		: this(_subject, _path, _flushInterval, _bufferSize, Encoding.UTF8) { }
 
+	//bad naming on my part but whutever
 	public void Start() {
 		active = true;
 	}
