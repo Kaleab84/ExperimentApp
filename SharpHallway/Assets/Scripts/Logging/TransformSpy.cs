@@ -2,6 +2,8 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
+using System;
 
 public class TransformSpy : MonoBehaviour
 {
@@ -30,7 +32,24 @@ public class TransformSpy : MonoBehaviour
 		}
 	}
 
-	public void NewTrial() {
+	public string GenerateExperimentID() {
+		long timeCodeMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+		StringBuilder sb = new StringBuilder();
+
+		long right = timeCodeMs % 10; //I guess we are using longs now... (it doesn't matter because this happens infrequently)
+
+		while(timeCodeMs > 0) {
+			right = (int)(timeCodeMs % 10); //Gets the rightmost digit
+
+			//Apply cypher here (append to sb when done)
+
+			timeCodeMs /= 10; //Gets rid of the rightmost digit
+		}
+	}
+
+
+    public void NewTrial() {
 		if(gameObject == null){ throw new MissingReferenceException("TransformSpy: TransformSpy must be attached to player camera for logging to occur."); }
 		if(trialLogger != null){ trialLogger.Dispose(); }
 
