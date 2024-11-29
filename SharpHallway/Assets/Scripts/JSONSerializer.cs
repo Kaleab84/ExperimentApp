@@ -1,23 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Numerics;
-using System.Runtime.Serialization.Formatters.Binary;
-using UnityEngine;
-using UnityEngine.UI;
-using static UnityEditor.PlayerSettings;
-using UnityEngine.UIElements;
-using Vector3 = UnityEngine.Vector3;
-using System.Linq;
 using UnityEditor;
-using Unity.VisualScripting;
+using UnityEngine;
 
 [System.Serializable]
-public class JSONScript : MonoBehaviour
+public class JSONSerializer : MonoBehaviour
 {
+    //Singleton
+    private static JSONSerializer instance;
+    public static JSONSerializer Instance { get { return instance; } private set { instance = value; } }
+
     [SerializeField] private int sceneNumber = 0;
     public int SceneNumber { get { return sceneNumber; } set { sceneNumber = value; } }
+
+    private TrialLogger trialLogger;
 
     public void SaveScene()
     {
@@ -83,7 +78,7 @@ public class JSONScript : MonoBehaviour
                 // Loop through all children of the "Moving Obstacles" GameObject
                 foreach (Transform movingObstacle in movingObstaclesTransform)
                 {
-                    MovingObstacleScript movingObstacleScript = movingObstacle.GetComponent<MovingObstacleScript>();
+                    MovingObstacleComp movingObstacleScript = movingObstacle.GetComponent<MovingObstacleComp>();
 
                     ObstacleInfo movingObstacleCopy = new ObstacleInfo();
                     movingObstacleCopy.Name = movingObstacle.name;
@@ -117,6 +112,7 @@ public class JSONScript : MonoBehaviour
     {
         // If Called from Game Editor, will be assigned class variable "SceneNumber" by default, else sceneNumber passed explicitly
         loadSceneNumber = (loadSceneNumber == null) ? SceneNumber : loadSceneNumber;
+        SceneNumber = loadSceneNumber.Value;
 
         string json = File.ReadAllText(Application.dataPath + "/SceneConfigurationFile.json");  // Load the json file
         AllScenesInfo All = JsonUtility.FromJson<AllScenesInfo>(json);
@@ -141,11 +137,19 @@ public class JSONScript : MonoBehaviour
             #endregion
 
             #region Load Static Obstacles 
+
             //Delete Previous Scene Static Obstacles
             Transform staticObstaclesTransform = transform.Find("Static Obstacles");
             if (staticObstaclesTransform != null)
             {
-                DestroyImmediate(staticObstaclesTransform.gameObject);
+                if (Application.isPlaying)
+                {
+                    Destroy(staticObstaclesTransform.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(staticObstaclesTransform.gameObject);
+                }
             }
 
             //Load New Scene Obstacles
@@ -160,15 +164,30 @@ public class JSONScript : MonoBehaviour
                 obstacle.transform.position = scene.Obstacles[i].Position;
                 obstacle.GetComponent<Renderer>().sharedMaterial = GetMaterial(scene.Obstacles[i].ObstacleMaterialPath);
                 obstacle.transform.SetParent(staticObstaclesParent.transform);
+
+                // Test code >>
+                if (obstacle.name == "FinishZone")
+                {
+                    obstacle.GetComponent<BoxCollider>().isTrigger = true;
+                    obstacle.GetComponent<Renderer>().enabled = false;
+                }
             }
             #endregion
 
             #region Load Moving Obstacles
+
             //Delete Previous Scene Moving Obstacles
             Transform movingObstaclesTransform = transform.Find("Moving Obstacles");
             if (movingObstaclesTransform != null)
             {
-                DestroyImmediate(movingObstaclesTransform.gameObject);
+                if (Application.isPlaying)
+                {
+                    Destroy(movingObstaclesTransform.gameObject);
+                }
+                else
+                {
+                    DestroyImmediate(movingObstaclesTransform.gameObject);
+                }
             }
 
             GameObject movingObstaclesParent = new GameObject("Moving Obstacles");
@@ -185,7 +204,7 @@ public class JSONScript : MonoBehaviour
                 movingObstacle.transform.SetParent(movingObstaclesParent.transform);
 
                 // Add the MovingObstacle script to the obstacle
-                MovingObstacleScript movingObstacleScript = movingObstacle.AddComponent<MovingObstacleScript>();
+                MovingObstacleComp movingObstacleScript = movingObstacle.AddComponent<MovingObstacleComp>();
                 movingObstacleScript.StartPoint = scene.MovingObstacles[i].StartPoint;
                 movingObstacleScript.EndPoint = scene.MovingObstacles[i].EndPoint;
                 movingObstacleScript.Speed = scene.MovingObstacles[i].Speed;
@@ -193,6 +212,9 @@ public class JSONScript : MonoBehaviour
                 movingObstacleScript.BackNForth = scene.MovingObstacles[i].BackNForth;
             }
             #endregion
+
+            TransformSpy.instance.NewTrial();
+            Debug.Log(loadSceneNumber.Value);
         }
         else
         {
@@ -207,6 +229,20 @@ public class JSONScript : MonoBehaviour
 
     private string GetMaterialPath(GameObject obj)
     {
-        return AssetDatabase.GetAssetPath(obj.GetComponent<Renderer>().sharedMaterial);
+        Renderer renderer = obj.GetComponent<Renderer>();
+        if (renderer != null && renderer.sharedMaterial != null)
+        {
+            return AssetDatabase.GetAssetPath(renderer.sharedMaterial);
+        }
+        else
+        {
+            Debug.LogWarning("Object does not have a Renderer component or its sharedMaterial is null.");
+            return null;
+        }
+    }
+
+    private void OnEnable()
+    {
+        Instance = this;
     }
 }

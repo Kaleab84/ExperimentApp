@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class MovingObstacleScript : MonoBehaviour
+public class MovingObstacleComp : MonoBehaviour
 {
     private bool isRespawning = false;
     private Renderer objRenderer;

@@ -1,58 +1,57 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private List<int> sceneOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+    private int currentScene = 0;
+
+    public float LevelTransitionDelay = 1f; // Delay before loading next level
+    public AudioSource audioPlayer;
+
+    public void Start()
     {
-        
+        ShuffleList(sceneOrder);    // Randomize scene order
+        JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);  // Load the first scene
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        //JSONScript.LoadScene();   
+        GameObject.Find("FinishZone").GetComponent<BoxCollider>().isTrigger = false;
+        StartCoroutine(TriggerLevelTransition(LevelTransitionDelay));
+    }
+
+    IEnumerator TriggerLevelTransition(float delay)
+    {
+        audioPlayer.Play();
+        yield return new WaitForSeconds(delay); // Wait for 'delay' seconds
+
+        if (currentScene >= 8)
+        {
+            currentScene = 0;
+        }
+
+        JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);
+        //yield return new WaitForSeconds(2f);
+
+        GetComponent<FPSController>().enabled = false;  // FPSControler overrides position, so it has to be disabled while resetting the position.
+        Vector3 closeWallPosition = Pastel.Instance.Close.transform.position; // Respawning position set to the "Close" Wall
+        transform.position = new Vector3(closeWallPosition.x, 1, closeWallPosition.z); // position.y has to be 1 (floor level)
+        yield return new WaitForSeconds(0.1f);
+        GetComponent<FPSController>().enabled = true;
+
+    }
+
+    private void ShuffleList(List<int> list)
+    {
+        for (int i = list.Count - 1; i > 0; i--)
+        {
+            int randomIndex = Random.Range(0, i + 1);
+            int temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 }
-/*
- using UnityEngine;
-using UnityEngine.SceneManagement;
-
-public class LevelTrigger : MonoBehaviour
-{
-    public Vector3 targetPosition;  // The position where the player triggers the next level
-    public float triggerRadius = 2f; // The radius within which the trigger activates
-    public float levelTransitionDelay = 1f; // Delay before loading next level
-
-    public void Update()
-    {
-        // Check if the player is close enough to the target position
-        if (Vector3.Distance(transform.position, targetPosition) <= triggerRadius)
-        {
-            // If player is close enough, trigger the level transition
-            TriggerLevelTransition();
-        }
-    }
-
-    private void TriggerLevelTransition()
-    {
-        // Call a function to load the next level (for example, we use the SceneManager to load the next scene)
-        Debug.Log("Player reached the target position! Transitioning to next level...");
-
-        // Load the next level (example: by index)
-        int nextLevelIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        if (nextLevelIndex < SceneManager.sceneCountInBuildSettings)
-        {
-            SceneManager.LoadScene(nextLevelIndex);
-        }
-        else
-        {
-            Debug.Log("No more levels! Returning to main menu or restarting.");
-        }
-    }
-}
- */
