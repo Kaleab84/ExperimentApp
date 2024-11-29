@@ -34,17 +34,19 @@ public class TransformSpy : MonoBehaviour
         if(trialLogger != null) { trialLogger.Dispose(); }
 
         Debug.Log(JSONSerializer.Instance.SceneNumber);
-        trialLogger = new TrialLogger(gameObject.transform, Path.Combine(basePath, $"{JSONSerializer.Instance.SceneNumber.ToString()}.csv"));
+        trialLogger = new TrialLogger(gameObject.transform, Path.Combine(basePath, $"{JSONSerializer.Instance.SceneNumber}.csv"));
         trialLogger.Start();
     }
 
     //Notes for future more cognizant self:
     // System must account for current trial loop
-    // basepath is paht of expirement folder, which is insider expierments folder.
+    // basepath is path of expierement folder, which is insider expierments folder.
 
     //Right now all files get overriden?
     //Scene number is always 7, when testing logging reported that the scene would change to level n and 7 where n was seemingly random as expected, but then level 7 was logged every single time.
     //Currently for some reason only one csv is created per expierment, and it is always titled 7.
+
+    //This isn't even a problem becasue we want to use trial numbers instead of level numbers, but they are still important for data collection.
 
     private void CreateBasePath() {
         basePath = Path.Combine(Application.persistentDataPath, "Experiments", GenerateExperimentID());
