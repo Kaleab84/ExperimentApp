@@ -112,6 +112,7 @@ public class JSONSerializer : MonoBehaviour
     {
         // If Called from Game Editor, will be assigned class variable "SceneNumber" by default, else sceneNumber passed explicitly
         loadSceneNumber = (loadSceneNumber == null) ? SceneNumber : loadSceneNumber;
+        SceneNumber = loadSceneNumber.Value;
 
         string json = File.ReadAllText(Application.dataPath + "/SceneConfigurationFile.json");  // Load the json file
         AllScenesInfo All = JsonUtility.FromJson<AllScenesInfo>(json);
@@ -119,7 +120,6 @@ public class JSONSerializer : MonoBehaviour
         if (loadSceneNumber < All.Scenes.Count)
         {
             SceneInfo scene = All.Scenes[loadSceneNumber.Value];    // Load the dictated scene
-            Debug.Log(loadSceneNumber.Value);
 
             #region Load Hallway
             // Fetches data from the JSON to a static reference of the Hallway "Pastel.Instance"
@@ -214,6 +214,7 @@ public class JSONSerializer : MonoBehaviour
             #endregion
 
             TransformSpy.instance.NewTrial();
+            Debug.Log(loadSceneNumber.Value);
         }
         else
         {
