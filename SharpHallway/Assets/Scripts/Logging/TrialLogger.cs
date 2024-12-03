@@ -38,7 +38,7 @@ public class TrialLogger : IDisposable {
 		
 		writer = new StreamWriter(_path, true, _encoding, _bufferSize);
 		writer.WriteLine("ExperimentID,TrialID,LevelID");
-		writer.WriteLine($"{TransformSpy.ExperimentID},{TransformSpy.TrialNum},{JSONSerializer.Instance.SceneNumber}\n");
+		writer.WriteLine($"{LogManager.ExperimentID},{LogManager.TrialNum},{JSONSerializer.Instance.SceneNumber}\n");
 		writer.WriteLine("Time,Player X,Player Y,Pitch,Yaw,Collision(s)");
 		writer.Flush();
 
