@@ -14,7 +14,12 @@ public class TransformSpy : MonoBehaviour
 	public static TransformSpy instance;
 	public TrialLogger trialLogger { get; private set; }
 
+    private static string experimentID;
 	private string basePath;
+    private static int trialNum = 0;
+
+    public static string ExperimentID{ get{ return experimentID; } }
+    public static int TrialNum { get{ return trialNum; } private set{ trialNum = value; } }
 
     public void Awake() {
 		instance = this;
@@ -29,12 +34,13 @@ public class TransformSpy : MonoBehaviour
 	}
 
     public void NewTrial() {
-        if(JSONSerializer.Instance.SceneNumber == 1) { CreateBasePath(); }
+        if(TrialNum == 0) { CreateBasePath(); }
+        TrialNum++;
         if(gameObject == null) { throw new MissingReferenceException("TransformSpy: TransformSpy must be attached to player camera for logging to occur."); }
         if(trialLogger != null) { trialLogger.Dispose(); }
 
         Debug.Log(JSONSerializer.Instance.SceneNumber);
-        trialLogger = new TrialLogger(gameObject.transform, Path.Combine(basePath, $"{JSONSerializer.Instance.SceneNumber}.csv"));
+        trialLogger = new TrialLogger(gameObject.transform, Path.Combine(basePath, $"{TrialNum}.csv"));
         trialLogger.Start();
     }
 
@@ -49,7 +55,8 @@ public class TransformSpy : MonoBehaviour
     //This isn't even a problem becasue we want to use trial numbers instead of level numbers, but they are still important for data collection.
 
     private void CreateBasePath() {
-        basePath = Path.Combine(Application.persistentDataPath, "Experiments", GenerateExperimentID());
+        experimentID = GenerateExperimentID();
+        basePath = Path.Combine(Application.persistentDataPath, "Experiments", experimentID);
         string directoryPath = Path.GetDirectoryName(basePath);
 
         if(Directory.Exists(directoryPath)){
@@ -62,8 +69,11 @@ public class TransformSpy : MonoBehaviour
 		long key = 482338932;
 
 		uuid = (uuid % 1000000007) ^ key;
-		return Base36(uuid);
+
+        return Base36(uuid);
 	}
+
+    // bbbxxxxgggbbbbb
 
     private string Base36(long num) {
         //Takes number and converts it into base 36, the same as any other base.
@@ -80,7 +90,6 @@ public class TransformSpy : MonoBehaviour
             num /= 36;
         } while(num > 0);
 
-        string final = sb.ToString().Reverse<char>().ToString();
-        return isNeg ? "-" + sb.ToString() : sb.ToString();
+        return sb.ToString();
     }
 }

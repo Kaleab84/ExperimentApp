@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 {
     private List<int> sceneOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
     private int currentScene = 0;
+    public static int CurrentScene{ get; }
 
     public float LevelTransitionDelay = 1f; // Delay before loading next level
     public AudioSource audioPlayer;
