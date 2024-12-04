@@ -29,7 +29,6 @@ public class LogManager : MonoBehaviour {
 	public void Start()
 	{
 		if (TransformSpy.Body == null) { throw new MissingReferenceException("LogManager: TransformSpy must be attached to player camera for logging to occur."); }
-		CreateBasePath();
 	}
 
 	public void FixedUpdate() {
@@ -45,8 +44,8 @@ public class LogManager : MonoBehaviour {
 
 		//Finally just make a new logger and tell it to start (probably unessary) yes I know I can't spell.
 
-		if (TrialNum == 0) { CreateBasePath(); }
-		TrialNum++;
+		Debug.Log($"New Trial #{TrialNum}");
+		if (TrialNum++ == 0) { CreateBasePath(); Debug.Log("New Base Path"); }
 
 		if (TransformSpy.Body == null) { throw new MissingReferenceException("LogManager: TransformSpy must be attached to player camera for logging to occur."); }
 		if (trialLogger != null) { trialLogger.Dispose(); }
@@ -72,7 +71,7 @@ public class LogManager : MonoBehaviour {
 		//Feel free to play around with this, the key can be whatever and the other number just needs to be a large enough prime.
 
 		long uuid = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-		long key = 482338932;
+		long key = 49979687; //changed this to a prime
 
 		uuid = (uuid % 1000000007) ^ key;
 

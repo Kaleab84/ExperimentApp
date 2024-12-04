@@ -64,8 +64,8 @@ public class TrialLogger : IDisposable {
 			Time.time - startTime,
 			subject.position.x,
 			subject.position.z,
-			subject.eulerAngles.y,
-			subject.eulerAngles.z
+			subject.eulerAngles.x,
+			subject.eulerAngles.y
 			);
 
 		sb.Append(','); //yep a whole new line to avoid string concat, what a world we live in.
@@ -97,11 +97,11 @@ public class TrialLogger : IDisposable {
 		}
 	}
 
-	public void LogCollision(GameObject go) {
+	public void LogCollision(GameObject obj) {
 		if (disposed) { throw new ObjectDisposedException($"Attempting to call methods on disposed class\n{path}"); }
 		if(!active){ return; }
 
-		collisions.Add(go.name);
+		collisions.Add(obj.name);
 	}
 
 	public void OnApplicationQuit() {

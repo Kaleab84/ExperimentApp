@@ -5,45 +5,58 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    private static GameManager instance;
+    public static GameManager Instance { get{ return instance; } private set{ instance = value; } }
+
     private List<int> sceneOrder = new List<int> { 0, 1, 2, 3, 4, 5, 6, 7 };
+    private Player player;
+
     private int currentScene = 0;
     public static int CurrentScene{ get; }
+
+    private int repetitionCount = 0;
 
     public float LevelTransitionDelay = 1f; // Delay before loading next level
     public AudioSource audioPlayer;
 
-    public void Start()
+	public void Awake()
+	{
+        Instance = this;
+	}
+
+	public void Start()
     {
+        player = Player.Instance;
         ShuffleList(sceneOrder);    // Randomize scene order
         JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);  // Load the first scene
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        GameObject.Find("FinishZone").GetComponent<BoxCollider>().isTrigger = false;
-        StartCoroutine(TriggerLevelTransition(LevelTransitionDelay));
+        //GameObject.Find("FinishZone").GetComponent<BoxCollider>().isTrigger = false;
+        //StartCoroutine(TriggerLevelTransition(LevelTransitionDelay));
     }
 
-    IEnumerator TriggerLevelTransition(float delay)
+    public void TriggerLevelTransition()
     {
         audioPlayer.Play();
-        yield return new WaitForSeconds(delay); // Wait for 'delay' seconds
+        //yield return new WaitForSeconds(delay); // Wait for 'delay' seconds
 
-        if (currentScene >= 8)
-        {
-            currentScene = 0;
+        if(repetitionCount <= 3){
+            if (currentScene >= 8)
+            {
+                currentScene = 0;
+                repetitionCount++;
+            }
+
+		    StartCoroutine(player.ResetPos());
+		    JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);
         }
 
-        JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);
-        //yield return new WaitForSeconds(2f);
-
-        GetComponent<FPSController>().enabled = false;  // FPSControler overrides position, so it has to be disabled while resetting the position.
-        Vector3 closeWallPosition = Pastel.Instance.Close.transform.position; // Respawning position set to the "Close" Wall
-        transform.position = new Vector3(closeWallPosition.x, 1, closeWallPosition.z); // position.y has to be 1 (floor level)
-        yield return new WaitForSeconds(0.1f);
-        GetComponent<FPSController>().enabled = true;
-
-    }
+        else{//end of game
+            Debug.Log("fin.");
+        }
+	}
 
     private void ShuffleList(List<int> list)
     {
