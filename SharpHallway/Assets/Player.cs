@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
@@ -8,10 +9,12 @@ public class Player : MonoBehaviour
 	private static Player instance;
 	public static Player Instance { get { return instance; } set{ instance = value; } }
 
-	private FPSController controller;
+    private HashSet<string> collisions = new HashSet<string>();
+    private FPSController controller;
+	
 	private bool fin = false;
 
-	private void Awake()
+	public void Awake()
 	{
 		Instance = this;
 		controller = gameObject.GetComponent<FPSController>();
@@ -20,25 +23,26 @@ public class Player : MonoBehaviour
 	public IEnumerator ResetPos()
 	{
 		controller.enabled = false;  // FPSControler overrides position, so it has to be disabled while resetting the position.
-
 		Vector3 closeWallPosition = Pastel.Instance.Close.transform.position; // Respawning position set to the "Close" Wall
-		//gameObject.transform.position = new Vector3(closeWallPosition.x, 1, closeWallPosition.z); // position.y has to be 1 (floor level)
-		gameObject.transform.position = new Vector3(0,1,0);
+		gameObject.transform.position = new Vector3(closeWallPosition.x, 1, closeWallPosition.z); // position.y has to be 1 (floor level)
 
-		yield return new WaitForSeconds(1);
+		yield return new WaitForSeconds(0.1f); //This is needed so that the character actually gets moved (unity issue prob)
 		controller.enabled = true;
 		fin = false;
 	}
+    
 
-	private void OnControllerColliderHit(ControllerColliderHit hit)
+    public void OnControllerColliderHit(ControllerColliderHit hit)
 	{
-		//Debug.Log($"{hit.gameObject.name}");
-
-
+		string name = hit.gameObject.name;
+		if(collisions.Add(name)) {
+			if(LogManager.Instance.trialLogger == null) { throw new NullReferenceException("Player: TrialLogger does not exist."); }
+			LogManager.Instance.trialLogger.LogCollision(name);
+		}
 	}
-
 	
-	private void OnTriggerEnter(Collider other)
+
+    public void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.name == "FinishZone") {
 			if (!fin) {

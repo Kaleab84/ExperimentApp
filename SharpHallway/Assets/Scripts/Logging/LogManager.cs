@@ -12,7 +12,8 @@ public class LogManager : MonoBehaviour {
 	//I am starting to like it more.
 
 	//So many static vars :/
-	public static LogManager instance;
+	private static LogManager instance;
+	public static LogManager Instance { get { return instance; } private set { instance = value; } }
 	public TrialLogger trialLogger { get; private set; }
 
 	private static string experimentID;
@@ -23,7 +24,7 @@ public class LogManager : MonoBehaviour {
 	public static int TrialNum { get { return trialNum; } private set { trialNum = value; } }
 
 	public void Awake() {
-		instance = this;
+		Instance = this;
 	}
 
 	public void Start()
@@ -33,7 +34,7 @@ public class LogManager : MonoBehaviour {
 
 	public void FixedUpdate() {
 		if (trialLogger != null) {
-			trialLogger.WriteLog();
+			//trialLogger.WriteLog();
 		}
 	}
 

@@ -97,11 +97,12 @@ public class TrialLogger : IDisposable {
 		}
 	}
 
-	public void LogCollision(GameObject obj) {
+	//Yes there are possibly better attributes to log that are less ambigious than the object name. If you want to create unique ID's or whatnot for each obstacle go for it.
+	public void LogCollision(string name) {
 		if (disposed) { throw new ObjectDisposedException($"Attempting to call methods on disposed class\n{path}"); }
 		if(!active){ return; }
 
-		collisions.Add(obj.name);
+		collisions.Add(name);
 	}
 
 	public void OnApplicationQuit() {
