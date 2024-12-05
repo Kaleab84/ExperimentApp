@@ -39,6 +39,10 @@ public class Player : MonoBehaviour
 			if(LogManager.Instance.trialLogger == null) { throw new NullReferenceException("Player: TrialLogger does not exist."); }
 			LogManager.Instance.trialLogger.LogCollision(name);
 		}
+
+		foreach(var v in collisions) {
+			
+		}
 	}
 	
 

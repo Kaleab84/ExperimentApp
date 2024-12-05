@@ -21,6 +21,7 @@ public class HallwayComp : MonoBehaviour
 
 
     private int xScale, zScale = 1;
+
     private Renderer rend;
 
 
@@ -29,7 +30,7 @@ public class HallwayComp : MonoBehaviour
         rend = gameObject.GetComponent<Renderer>();
     }
 
-    private void Update()
+    public void Update()
     {
         switch ((int)Face)
         {
