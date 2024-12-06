@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -13,6 +14,7 @@ public class Player : MonoBehaviour
     private FPSController controller;
 	
 	private bool fin = false;
+	public bool Fin { set { fin = value; } }
 
 	public void Awake()
 	{
@@ -22,12 +24,13 @@ public class Player : MonoBehaviour
 
 	public IEnumerator ResetPos()
 	{
-		controller.enabled = false;  // FPSControler overrides position, so it has to be disabled while resetting the position.
+		//make sure that we are not using vr
+		if(controller != null) { controller.enabled = false; }
 		Vector3 closeWallPosition = Pastel.Instance.Close.transform.position; // Respawning position set to the "Close" Wall
 		gameObject.transform.position = new Vector3(closeWallPosition.x, 1, closeWallPosition.z); // position.y has to be 1 (floor level)
 
 		yield return new WaitForSeconds(0.1f); //This is needed so that the character actually gets moved (unity issue prob)
-		controller.enabled = true;
+		if(controller != null) { controller.enabled = true; }
 		fin = false;
 	}
     
@@ -38,10 +41,6 @@ public class Player : MonoBehaviour
 		if(collisions.Add(name)) {
 			if(LogManager.Instance.trialLogger == null) { throw new NullReferenceException("Player: TrialLogger does not exist."); }
 			LogManager.Instance.trialLogger.LogCollision(name);
-		}
-
-		foreach(var v in collisions) {
-			
 		}
 	}
 	

@@ -34,7 +34,7 @@ public class LogManager : MonoBehaviour {
 
 	public void FixedUpdate() {
 		if (trialLogger != null) {
-			//trialLogger.WriteLog();
+			trialLogger.WriteLog();
 		}
 	}
 

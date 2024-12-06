@@ -211,8 +211,8 @@ public class JSONSerializer : MonoBehaviour
             }
 			#endregion
 
-			//LogManager.instance.NewTrial();
-            //Debug.Log(loadSceneNumber.Value);
+			LogManager.Instance.NewTrial();
+            Debug.Log(loadSceneNumber.Value);
         }
         else
         {

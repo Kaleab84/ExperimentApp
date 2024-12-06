@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
 
 		    StartCoroutine(player.ResetPos());
 		    JSONSerializer.Instance.LoadScene(sceneOrder[currentScene++]);
+            player.Fin = false;
         }
 
         else{//end of game
