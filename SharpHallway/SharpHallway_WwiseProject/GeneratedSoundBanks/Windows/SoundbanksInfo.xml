@@ -53,7 +53,7 @@
 				<GameParameter Id="3291598030" Name="LRCollisionPan"/>
 			</GameParameters>
 		</SoundBank>
-		<SoundBank Id="3161908922" Type="User" Language="SFX" Hash="{22717343-6C52-52DC-28A4-A60B38C75FB0}">
+		<SoundBank Id="3161908922" Type="User" Language="SFX" Hash="{CC79E365-12A4-96C1-63A8-AAC48BB24939}">
 			<ShortName>main</ShortName>
 			<Path>main.bnk</Path>
 			<Media>
@@ -173,5 +173,5 @@
 			</GameParameters>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{8D70119B-94A3-5768-7DBD-FCBF96A92B85}</FileHash>
+	<FileHash>{EBA5D3E5-D838-CED4-E93A-DB714D1D857C}</FileHash>
 </SoundBanksInfo>

@@ -33,17 +33,13 @@ public class Player : MonoBehaviour
 		if(controller != null) { controller.enabled = true; }
 		fin = false;
 	}
-    
 
-    public void OnControllerColliderHit(ControllerColliderHit hit)
-	{
-		string name = hit.gameObject.name;
-		if(collisions.Add(name)) {
-			if(LogManager.Instance.trialLogger == null) { throw new NullReferenceException("Player: TrialLogger does not exist."); }
-			LogManager.Instance.trialLogger.LogCollision(name);
-		}
-	}
-	
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        LogManager.Instance.LogCollision(collision.gameObject.name);
+    }
+
 
     public void OnTriggerEnter(Collider other)
 	{

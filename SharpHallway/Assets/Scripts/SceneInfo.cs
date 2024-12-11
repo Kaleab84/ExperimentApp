@@ -15,6 +15,8 @@ public class ObstacleInfo
     public float Speed;
     public bool BackNForth;
     public String ObstacleMaterialPath = "";
+    public String tag = "";
+    public String Event = "";
 }
 
 [System.Serializable]

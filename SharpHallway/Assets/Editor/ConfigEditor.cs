@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(JSONSerializer))]
+[CustomEditor(typeof(JSONScript))]
 public class ConfigEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -13,7 +13,7 @@ public class ConfigEditor : Editor
         DrawDefaultInspector();
 
         // Get the target object
-        JSONSerializer JSONScript = (JSONSerializer)target;
+        JSONScript JSONScript = (JSONScript)target;
 
         // Create a button and call SaveScene when pressed
         if (GUILayout.Button("Save Config"))

@@ -22,6 +22,18 @@
 											<SegmentShape>Log1</SegmentShape>
 										</Point>
 										<Point>
+											<XPos>2.48568</XPos>
+											<YPos>-12.92527</YPos>
+											<Flags>0</Flags>
+											<SegmentShape>Log1</SegmentShape>
+										</Point>
+										<Point>
+											<XPos>4.45559</XPos>
+											<YPos>-22.48561</YPos>
+											<Flags>0</Flags>
+											<SegmentShape>Log1</SegmentShape>
+										</Point>
+										<Point>
 											<XPos>10</XPos>
 											<YPos>-200</YPos>
 											<Flags>37</Flags>

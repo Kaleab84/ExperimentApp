@@ -37,7 +37,7 @@
                     },
                     "RespawnDelay": 0.0,
                     "Speed": 0.0,
-                    "BackNForth": false,
+                    "BackNForth": true,
                     "ObstacleMaterialPath": ""
                 },
                 {
@@ -64,7 +64,7 @@
                     },
                     "RespawnDelay": 0.0,
                     "Speed": 0.0,
-                    "BackNForth": false,
+                    "BackNForth": true,
                     "ObstacleMaterialPath": "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Materials/URP/Prototype_512x512_Magenta.mat"
                 },
                 {
