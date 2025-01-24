@@ -12,6 +12,7 @@ public class MovingObstacleComp : MonoBehaviour
     public float RespawnDelay; // time before respawning
     public float Speed;
     public bool BackNForth;
+    public string EventName;
 
     void Start()
     {

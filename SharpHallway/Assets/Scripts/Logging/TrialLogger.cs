@@ -37,6 +37,8 @@ public class TrialLogger : IDisposable {
 		}
 		
 		writer = new StreamWriter(_path, true, _encoding, _bufferSize);
+		writer.WriteLine("ExperimentID,TrialID,LevelID");
+		writer.WriteLine($"{LogManager.ExperimentID},{LogManager.TrialNum},{JSONSerializer.Instance.SceneNumber}\n");
 		writer.WriteLine("Time,Player X,Player Y,Pitch,Yaw,Collision(s)");
 		writer.Flush();
 
@@ -62,8 +64,8 @@ public class TrialLogger : IDisposable {
 			Time.time - startTime,
 			subject.position.x,
 			subject.position.z,
-			subject.eulerAngles.y,
-			subject.eulerAngles.z
+			subject.eulerAngles.x,
+			subject.eulerAngles.y
 			);
 
 		sb.Append(','); //yep a whole new line to avoid string concat, what a world we live in.
@@ -95,11 +97,12 @@ public class TrialLogger : IDisposable {
 		}
 	}
 
-	public void LogCollision(GameObject go) {
+	//Yes there are possibly better attributes to log that are less ambigious than the object name. If you want to create unique ID's or whatnot for each obstacle go for it.
+	public void LogCollision(string name) {
 		if (disposed) { throw new ObjectDisposedException($"Attempting to call methods on disposed class\n{path}"); }
 		if(!active){ return; }
 
-		collisions.Add(go.name);
+		collisions.Add(name);
 	}
 
 	public void OnApplicationQuit() {

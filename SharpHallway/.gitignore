@@ -76,6 +76,8 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+README.md
+
 
 # WWise - trying to keep repo size down
 /Assets/Wwise/API/Runtime/Plugins/Mac/

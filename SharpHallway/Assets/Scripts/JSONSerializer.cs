@@ -12,8 +12,6 @@ public class JSONSerializer : MonoBehaviour
     [SerializeField] private int sceneNumber = 0;
     public int SceneNumber { get { return sceneNumber; } set { sceneNumber = value; } }
 
-    private TrialLogger trialLogger;
-
     public void SaveScene()
     {
         string json = File.ReadAllText(Application.dataPath + "/SceneConfigurationFile.json");  // Retrieving all scenes to modify them
@@ -57,6 +55,7 @@ public class JSONSerializer : MonoBehaviour
                 {
                     ObstacleInfo staticObstacleCopy = new ObstacleInfo();
                     staticObstacleCopy.Name = staticObstacle.name;
+                    staticObstacleCopy.tag = staticObstacle.tag;
                     staticObstacleCopy.Scale = staticObstacle.localScale;
                     staticObstacleCopy.Position = staticObstacle.position;
                     staticObstacleCopy.ObstacleMaterialPath = GetMaterialPath(staticObstacle.gameObject);
@@ -160,6 +159,7 @@ public class JSONSerializer : MonoBehaviour
             {
                 GameObject obstacle = GameObject.CreatePrimitive(PrimitiveType.Cube);
                 obstacle.name = scene.Obstacles[i].Name;
+                obstacle.tag = scene.Obstacles[i].tag;
                 obstacle.transform.localScale = scene.Obstacles[i].Scale;
                 obstacle.transform.position = scene.Obstacles[i].Position;
                 obstacle.GetComponent<Renderer>().sharedMaterial = GetMaterial(scene.Obstacles[i].ObstacleMaterialPath);
@@ -210,11 +210,25 @@ public class JSONSerializer : MonoBehaviour
                 movingObstacleScript.Speed = scene.MovingObstacles[i].Speed;
                 movingObstacleScript.RespawnDelay = scene.MovingObstacles[i].RespawnDelay;
                 movingObstacleScript.BackNForth = scene.MovingObstacles[i].BackNForth;
-            }
-            #endregion
+                //movingObstacleScript.EventName = scene.MovingObstacles[i].Event;
 
-            TransformSpy.instance.NewTrial();
+                // Add a rigidbody to the obstacle
+                //movingObstacle.AddComponent<Rigidbody>();
+
+                //// Attach Wwiseattcher script to the obstacle, This attaches the sound event name directly you can change it in the inspector,
+                ///but it is better to change it in the JSON file
+    
+                WwiseAttacher wwiseattcher = movingObstacle.AddComponent<WwiseAttacher>();
+                wwiseattcher.eventName = "PLAY_PUSHING_GROCERY_CART_63821";
+                Debug.Log($"Is {gameObject.name} active? {gameObject.activeInHierarchy}");
+
+
+            }
+			#endregion
+
+			LogManager.Instance.NewTrial();
             Debug.Log(loadSceneNumber.Value);
+
         }
         else
         {
